@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEPC0DCSAURABH - Hacker IT Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Orbitron', monospace; }
+body { background:#0d0d0d; color:#00ff00; overflow-x:hidden; cursor:default; }
+
+/* Matrix Canvas */
+#matrixCanvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; }
+
+/* Header / Video Banner */
+header {
+  position:relative; width:100%; height:100vh; display:flex;
+  justify-content:center; align-items:center; text-align:center; overflow:hidden;
+}
+header video {
+  position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0;
+}
+header::before {
+  content:''; position:absolute; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.3);
+}
+header h1 {
+  position:relative; font-size:4rem; color:#00ff00; animation: glitch 1s infinite;
+  text-shadow:0 0 5px #0ff,0 0 10px #0ff; z-index:2;
+}
+
+/* Hacker-style welcome typing with glitch/flicker */
+#welcome {
+  position:absolute; top:65%; left:50%; transform:translateX(-50%);
+  color:#00ff00; font-size:1.8rem; text-shadow:0 0 10px #0ff,0 0 20px #0ff;
+  z-index:2; white-space:pre; text-align:center;
+  animation: flicker 1.5s infinite alternate;
+}
+
+/* Glitch animation for header */
+@keyframes glitch {
+  0%{ text-shadow:2px 0 #f00,-2px 0 #0ff; }
+  25%{ text-shadow:-2px 0 #f0f,2px 0 #0ff; }
+  50%{ text-shadow:2px 2px #f0f,-2px -2px #0ff; }
+  75%{ text-shadow:-2px -2px #f0f,2px 2px #0ff; }
+  100%{ text-shadow:2px 0 #f00,-2px 0 #0ff; }
+}
+
+/* Flicker animation for welcome message */
+@keyframes flicker {
+  0%{ opacity:1; text-shadow:0 0 10px #0ff,0 0 20px #0ff; }
+  20%{ opacity:0.7; text-shadow:0 0 5px #0ff,0 0 10px #0ff; }
+  40%{ opacity:1; text-shadow:0 0 15px #0ff,0 0 25px #0ff; }
+  60%{ opacity:0.6; text-shadow:0 0 3px #0ff,0 0 8px #0ff; }
+  80%{ opacity:1; text-shadow:0 0 10px #0ff,0 0 20px #0ff; }
+  100%{ opacity:0.8; text-shadow:0 0 5px #0ff,0 0 15px #0ff; }
+}
+
+/* Navigation */
+nav {
+  position: fixed; top:0; left:0; width:100%; display:flex; justify-content:center;
+  background: rgba(0,0,0,0.8); z-index:10;
+}
+nav ul { display:flex; list-style:none; }
+nav ul li { margin:0 20px; }
+nav ul li a { color:#00ff00; text-decoration:none; font-weight:bold; padding:15px; display:block; transition:0.3s; }
+nav ul li a:hover { color:#0ff; text-shadow:0 0 5px #0ff; }
+
+/* Services */
+.services { padding:100px 20px; text-align:center; position:relative; z-index:2; }
+.services h2 { font-size:3rem; margin-bottom:50px; text-shadow:0 0 10px #0ff; }
+.service-cards { display:flex; flex-wrap:wrap; justify-content:center; gap:30px; }
+a.card-link { text-decoration:none; }
+.card {
+  background: rgba(0,0,0,0.85); border:1px solid #00ff00; padding:30px; width:250px;
+  transition:0.3s; box-shadow:0 0 10px #0ff; position:relative; overflow:hidden;
+  cursor:pointer;
+}
+.card::after {
+  content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+  background: rgba(0,255,255,0.2); transform: skewX(-20deg); transition:0.5s;
+}
+.card:hover::after { left:200%; }
+.card:hover { transform:scale(1.05); box-shadow:0 0 20px #0ff; }
+.card i { font-size:3rem; margin-bottom:15px; transition:0.3s; }
+.card:hover i { color:#0ff; text-shadow:0 0 15px #0ff,0 0 30px #0ff; }
+.card h3 {
+  margin-bottom:10px;
+  color:#00ff00; /* green service name */
+  text-shadow:0 0 5px #0ff;
+}
+.card:hover h3{
+  text-shadow:0 0 15px #0ff,0 0 30px #0ff;
+}
+.card p { font-size:0.9rem; color:#00ff00; }
+
+/* Footer */
+footer { background:#111; padding:40px 20px; text-align:center; border-top:1px solid #00ff00; position:relative; z-index:2; }
+footer p { margin-bottom:10px; }
+footer a { color:#00ff00; text-decoration:none; transition:0.3s; }
+footer a:hover { color:#0ff; text-shadow:0 0 5px #0ff; }
+
+/* Placeholder image */
+#footer-image { margin-top:20px; width:200px; height:150px; background:#222; display:inline-block; }
+
+/* Cursor particles */
+.particle { position:absolute; width:6px; height:6px; background:#0ff; border-radius:50%;
+pointer-events:none; opacity:0.8; animation: floatParticle 1s linear forwards; }
+@keyframes floatParticle { 0%{ transform:translate(0,0) scale(1); opacity:1; } 100%{ transform:translate(var(--x), var(--y)) scale(0); opacity:0; } }
+
+/* Floating background particles */
+.bg-particle { position:absolute; width:4px; height:4px; background:#0ff; border-radius:50%; opacity:0.5;
+pointer-events:none; animation:moveParticle linear infinite; }
+@keyframes moveParticle { from{transform:translateY(0);} to{transform:translateY(-110vh);} }
+
+/* WhatsApp floating button */
+#whatsapp-button{
+  position:fixed;
+  bottom:30px;
+  right:30px;
+  background:#25D366;
+  color:white;
+  padding:15px 20px;
+  border-radius:50px;
+  font-weight:bold;
+  font-size:1.1rem;
+  z-index:100;
+  box-shadow:0 0 15px #25D366;
+  text-decoration:none;
+  transition:0.3s;
+}
+#whatsapp-button:hover{
+  transform:scale(1.1);
+  box-shadow:0 0 25px #25D366;
+}
+
+/* Responsive */
+@media(max-width:768px){ header h1{ font-size:2.5rem; } #welcome{font-size:1.4rem; top:70%;} .service-cards{ flex-direction:column; align-items:center; } }
+</style>
+</head>
+<body>
+
+<canvas id="matrixCanvas"></canvas>
+
+<nav>
+<ul>
+<li><a href="#">Home</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#">About</a></li>
+<li><a href="#">Contact</a></li>
+</ul>
+</nav>
+
+<header>
+<video autoplay muted loop>
+<source src="https://www.videvo.net/videvo_files/converted/2016_08/preview/Hacker_Background_1080p.mp447743.mp4" type="video/mp4">
+</video>
+<h1>WEPC0DCSAURABH</h1>
+<div id="welcome"></div>
+</header>
+
+<section class="services" id="services">
+<h2>Our Services</h2>
+<div class="service-cards">
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>💻</i><h3>Web Development</h3><p>Professional websites hacker style.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>🔒</i><h3>Cyber Security</h3><p>Secure your systems from threats.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>📱</i><h3>App Development</h3><p>Mobile apps with latest tech.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>⚡</i><h3>IT Consulting</h3><p>Expert advice for infrastructure.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>🌐</i><h3>SEO Optimization</h3><p>Improve website ranking.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>🛠️</i><h3>Maintenance</h3><p>Website & server maintenance.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>☁️</i><h3>Cloud Services</h3><p>Cloud storage & management.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>💾</i><h3>Database Management</h3><p>Efficient DB solutions.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>🕵️‍♂️</i><h3>Penetration Testing</h3><p>Identify security vulnerabilities.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>👾</i><h3>Ethical Hacking</h3><p>Simulated attacks to strengthen systems.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>🛡️</i><h3>Malware Analysis</h3><p>Detect and analyze malicious code.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>📡</i><h3>Network Monitoring</h3><p>Keep your networks secure & active.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>🕸️</i><h3>VPN & Proxy Solutions</h3><p>Anonymous & safe internet access.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>🌑</i><h3>Dark Web Research</h3><p>Monitor threats in hidden networks.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>🎯</i><h3>Social Engineering Awareness</h3><p>Train employees to prevent attacks.</p></div></a>
+  <a class="card-link" href="https://wa.me/917319920817" target="_blank"><div class="card"><i>🔥</i><h3>Advanced Firewall Setup</h3><p>Block malicious access efficiently.</p></div></a>
+</div>
+</section>
+
+ <footer>
+  <p>© 2025 WEPC0DCSAURABH</p>
+  <p>All links & addresses here.</p>
+  <!-- Replace this src with your image path -->
+  <img id="footer-image" src="file:///C:/Users/admin/Documents/WhatsApp%20%E0%A4%AB%E0%A4%BC%E0%A5%8B%E0%A4%9F%E0%A5%8B%202025-08-16,%2002.43.17%20%E0%A4%AC%E0%A4%9C%E0%A5%87_65341438.jpg" alt="My Image">
+</footer>
+
+
+<!-- WhatsApp floating button -->
+<a href="https://wa.me/917319920817" target="_blank" id="whatsapp-button">💬 WhatsApp</a>
+
+<!-- Hacker beep sound -->
+<audio id="beepSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+
+<script>
+// Matrix Rain
+const canvas = document.getElementById("matrixCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
+const fontSize = 16; const columns = canvas.width/fontSize; const drops=[];
+for(let x=0;x<columns;x++) drops[x]=Math.random()*canvas.height;
+function drawMatrix(){
+ctx.fillStyle="rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="#0f0"; ctx.font=fontSize+"px monospace";
+for(let i=0;i<drops.length;i++){
+const text=letters.charAt(Math.floor(Math.random()*letters.length));
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0;
+drops[i]++;
+}}
+setInterval(drawMatrix,50);
+window.addEventListener('resize',()=>{ canvas.width=window.innerWidth; canvas.height=window.innerHeight; });
+
+// Cursor particles
+document.addEventListener("mousemove",function(e){
+for(let i=0;i<3;i++){
+const p=document.createElement("div"); p.classList.add("particle");
+document.body.appendChild(p);
+const x=(Math.random()-0.5)*50; const y=(Math.random()-0.5)*50;
+p.style.left=e.pageX+"px"; p.style.top=e.pageY+"px";
+p.style.setProperty("--x",x+"px"); p.style.setProperty("--y",y+"px");
+setTimeout(()=>p.remove(),1000);
+}});
+
+// Floating background particles
+for(let i=0;i<80;i++){
+const bg=document.createElement("div"); bg.classList.add("bg-particle");
+bg.style.left=Math.random()*window.innerWidth+"px"; bg.style.top=Math.random()*window.innerHeight+"px";
+bg.style.width=2+Math.random()*4+"px"; bg.style.height=2+Math.random()*4+"px";
+bg.style.animationDuration=5+Math.random()*10+"s"; document.body.appendChild(bg);
+}
+
+// Scroll video slight effect
+window.addEventListener("scroll",function(){
+const header=document.querySelector("header");
+header.style.transform=`translateY(${window.scrollY*0.1}px)`;
+});
+
+// Hacker-style typing welcome message in green with beep
+const welcome = document.getElementById("welcome");
+const beep = document.getElementById("beepSound");
+const messages = [
+"*** WARNING ***",
+"Welcome to WEPC0DCSAURABH",
+"Accessing dangerous IT Services...",
+"Web Development | Cyber Security | App Development",
+"IT Consulting | SEO | Maintenance | Cloud Services | Database Management",
+"Penetration Testing | Ethical Hacking | Malware Analysis | Network Monitoring",
+"VPN & Proxy Solutions | Dark Web Research | Social Engineering Awareness | Advanced Firewall Setup",
+"System Hacked... Proceed with caution!"
+];
+let msgIndex=0, charIndex=0;
+function typeMessage(){
+  if(msgIndex<messages.length){
+    if(charIndex<messages[msgIndex].length){
+      welcome.textContent+=messages[msgIndex].charAt(charIndex);
+      if(Math.random()<0.15){ beep.play(); } // random beep
+      charIndex++;
+      setTimeout(typeMessage,50);
+    } else {
+      welcome.textContent+='\n';
+      msgIndex++; charIndex=0;
+      setTimeout(typeMessage,500);
+    }
+  }
+}
+window.onload=typeMessage;
+</script>
+
+</body>
+</html>
